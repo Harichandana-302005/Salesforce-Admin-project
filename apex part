@@ -1,0 +1,40 @@
+trigger SendPaymentReminder on Participant__c (after insert, after update) {
+    List<Messaging.SingleEmailMessage> emails = new List<Messaging.SingleEmailMessage>();
+    
+    for (Participant__c p : Trigger.new) {
+        if(p.Send_Reminder__c ==true){
+            if(p.Registred_Amount__c == 0 || p.Status__c!='Pending'){
+                system.debug('paid '+p);
+                Messaging.SingleEmailMessage email = new Messaging.SingleEmailMessage();
+                email.setToAddresses(new String[]{p.Email__c});
+                email.setSubject('Registration Success ');
+                email.setPlainTextBody(
+                    'Dear ' + p.Name + ',\n\n' +
+                    'This is to inform you that your are successfully registered for the Event - '+p.Event_name__c+'\n\n'+
+                    'Regards\n'+
+                    'JITS'
+                );
+                emails.add(email);
+            }
+            else if(p.Registred_Amount__c != 0 && p.Status__c=='Pending'){
+                system.debug('pending '+p);
+                Messaging.SingleEmailMessage email = new Messaging.SingleEmailMessage();
+                email.setToAddresses(new String[]{p.Email__c});
+                email.setSubject('Registration Success and Payment Due');
+                email.setPlainTextBody(
+                    'Dear ' + p.Name + ',\n\n' +
+                    'This is to inform you that your are successfully registered for the Event - '+p.Event_name__c+' And your amount for the Event is due of '+p.Registred_Amount__c+'/- \n\n'+
+                    'Regards\n'+
+                    'JITS'
+                );
+                emails.add(email);
+            } 
+        }
+    }
+    system.debug('emails '+emails);
+    // Send emails
+    if (!emails.isEmpty()) {
+        system.debug('email Sending ');
+        Messaging.sendEmail(emails);
+    }
+}
