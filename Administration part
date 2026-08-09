@@ -1,0 +1,23 @@
+Salesforce Administration
+│
+├── Objects
+│   ├── Events
+│   │   ├── Event Name
+│   │   ├── Category
+│   │   ├── Date Time
+│   │   ├── Registration Fee
+│   │   └── Venue
+│   │
+│   └── Participants
+│       ├── Name
+│       ├── Email
+│       ├── Phone
+│       ├── Event Registered
+│       ├── Status of Payment
+│       └── Date and Time
+│
+├── Relationship
+│   └── Lookup Relationship between Events and Participants
+│
+└── Dashboard
+    └── Event Registered vs Participants
